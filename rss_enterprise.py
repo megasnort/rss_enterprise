@@ -1,5 +1,7 @@
 import os
 import json
+import tkinter as tk
+from tkinter import ttk, TclError
 import feedparser
 
 from future import Future
@@ -31,12 +33,26 @@ def load_news_items(feed_urls):
     return sorted_entries
 
 
-def main():
+def refresh_list(tree):
     settings_path = get_settings_path()
     settings = load_settings(settings_path)
     news_items = load_news_items(settings['feed_urls'])
     for i in news_items:
-        print(i['title'])
+        print(i)
+        try:
+            tree.insert('', 'end', i['id'], text=i['title'])
+        except TclError:
+            pass
+
+def main():
+    root = tk.Tk()
+
+    tree = ttk.Treeview(root)
+    refresh_list(tree)
+
+    tree.pack()
+
+    root.mainloop()
 
 
 if __name__ == '__main__':
