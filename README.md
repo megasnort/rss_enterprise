@@ -6,8 +6,6 @@ In my opinion, existing RSS Readers make everything to complicated. I just want 
 - view one list with the unread news items of all the feeds
 - view the body of these news item by walking this list
 - open the news item in the default browser, in the background
+- have a RSS Reader with a hilarious name
 
-Older versions of NetNewsWire were able to provide this functionality but since I moved to linux I no longer have that choice.
-
-The name? Trekkies will find it hilarious. That is reason enough.
-
+For now, nothing works, except the loading of some feeds defined in a settings file.
