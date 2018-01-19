@@ -1,0 +1,7 @@
+{
+  "feed_urls": [
+    "https://lijsttrekkers.be/rss/",
+    "http://www.questionablecontent.net/QCRSS.xml",
+    "http://sporza.be/cm/sporza/wielrennen?mode=atom&action=submit"
+  ]
+}
