@@ -1,7 +1,7 @@
 import os
 import json
 import tkinter as tk
-from tkinter import ttk, TclError
+from tkinter import ttk, TclError, BOTH, Text, Frame
 import feedparser
 
 from future import Future
@@ -49,10 +49,26 @@ def main():
     root = tk.Tk()
     root.geometry("800x500")
 
-    tree = ttk.Treeview(root)
+    top_frame = Frame(root)
+    top_frame.pack(fill=BOTH, expand=True)
+
+    bottom_frame = Frame(root)
+    bottom_frame.pack(fill=BOTH, expand=True)
+
+    tree = ttk.Treeview(top_frame, selectmode='browse')
     refresh_list(tree)
 
-    tree.pack()
+    scrollbar_tree = ttk.Scrollbar(top_frame, orient="vertical", command=tree.yview)
+    tree.configure(yscrollcommand=scrollbar_tree.set)
+    scrollbar_tree.pack(side='right', fill='y')
+    tree.pack(fill=BOTH, expand=True)
+
+    text = Text(bottom_frame)
+
+    scrollbar_text = ttk.Scrollbar(bottom_frame, orient="vertical", command=text.yview)
+    text.configure(yscrollcommand=scrollbar_text.set)
+    scrollbar_text.pack(side='right', fill='y')
+    text.pack(fill=BOTH, expand=True)
 
     root.mainloop()
 
