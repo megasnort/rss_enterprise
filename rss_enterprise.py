@@ -38,14 +38,16 @@ def refresh_list(tree):
     settings = load_settings(settings_path)
     news_items = load_news_items(settings['feed_urls'])
     for i in news_items:
-        print(i)
+        # print(i)
         try:
             tree.insert('', 'end', i['id'], text=i['title'])
         except TclError:
             pass
 
+
 def main():
     root = tk.Tk()
+    root.geometry("800x500")
 
     tree = ttk.Treeview(root)
     refresh_list(tree)
