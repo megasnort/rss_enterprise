@@ -3,14 +3,14 @@ import json
 import tkinter as tk
 from tkinter import ttk, TclError, BOTH, Text, Frame
 import feedparser
-
+from dateutil.parser import parse
 from future import Future
 
 
 class RssEnterprise():
     def __init__(self):
         root = tk.Tk()
-        root.geometry("800x500")
+        root.geometry("1000x500")
 
         top_frame = Frame(root)
         top_frame.pack(fill=BOTH, expand=True)
@@ -29,7 +29,7 @@ class RssEnterprise():
         self.tree.heading('#1', text='feed', anchor=tk.CENTER)
         self.tree.heading('#2', text='published', anchor=tk.CENTER)
 
-        self.tree.column('#0', stretch=tk.YES, minwidth=50, width=430)
+        self.tree.column('#0', stretch=tk.YES, minwidth=50, width=630)
         self.tree.column('#1', stretch=tk.YES, minwidth=50, width=150)
         self.tree.column('#2', stretch=tk.YES, minwidth=50, width=200)
 
@@ -64,9 +64,11 @@ class RssEnterprise():
         for feed in feeds:
             for i in feed["items"]:
                 i['channel_title'] = feed['channel']['title']
+                i['formatted_date'] = parse(i['published'])
             entries.extend(feed["items"])
 
-        sorted_entries = sorted(entries, key=lambda entry: entry['published'])
+        sorted_entries = sorted(entries, key=lambda entry: entry['formatted_date'])
+        sorted_entries.reverse()
 
         return sorted_entries
 
@@ -77,7 +79,7 @@ class RssEnterprise():
         for i in news_items:
             # print(i)
             try:
-                self.tree.insert('', 'end', i['id'], text=i['title'], values=(i['channel_title'], i['published'], ))
+                self.tree.insert('', 'end', i['id'], text=i['title'], values=(i['channel_title'], i['formatted_date'], ))
             except TclError:
                 pass
 
