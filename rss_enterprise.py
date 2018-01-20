@@ -76,8 +76,12 @@ class RssEnterprise():
     def load_settings(self, settings_path):
         print('loading settings')
         with open(settings_path) as fp:
-            settings = json.load(fp)
-            return settings
+            try:
+                settings = json.load(fp)
+                return settings
+            except json.decoder.JSONDecodeError:
+                print(self.get_settings_path() + ' seems to be malformed. Is should be a valid JSON file')
+                exit(1)
 
     def load_news_items(self, feed_urls):
         print('loading news items')
