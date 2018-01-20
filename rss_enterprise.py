@@ -1,5 +1,4 @@
 import os
-import json
 import tkinter as tk
 from tkinter import ttk, TclError, BOTH, Text, Frame, END
 import feedparser
@@ -58,8 +57,8 @@ class RssEnterprise():
         if not os.path.isdir(self.settings_folder_path):
             os.mkdir(self.settings_folder_path)
 
-        if not os.path.isfile(self.get_settings_path()):
-            copyfile(os.path.join('test', 'settings.json'), self.get_settings_path())
+        if not os.path.isfile(self.get_feeds_path()):
+            copyfile(os.path.join('test', 'feeds.txt'), self.get_feeds_path())
 
         if not os.path.isfile(self.get_cache_path()):
             with open(self.get_cache_path(), mode="w") as fp:
@@ -69,21 +68,17 @@ class RssEnterprise():
         id = self.tree.selection()[0]
         self.open_link(id)
 
-    def get_settings_path(self):
-        return os.path.join(self.settings_folder_path, 'settings.json')
+    def get_feeds_path(self):
+        return os.path.join(self.settings_folder_path, 'feeds.txt')
 
     def get_cache_path(self):
         return os.path.join(self.settings_folder_path, 'cache')
 
-    def load_settings(self, settings_path):
-        print('loading settings')
-        with open(settings_path) as fp:
-            try:
-                settings = json.load(fp)
-                return settings
-            except json.decoder.JSONDecodeError:
-                print(self.get_settings_path() + ' seems to be malformed. Is should be a valid JSON file')
-                exit(1)
+    def load_feeds(self, feeds_path):
+        print('loading feeds')
+        with open(feeds_path, 'r') as fp:
+            feeds = [l.strip() for l in fp.read().splitlines() if l.strip() != '']
+            return feeds
 
     def add_line_to_cache(self, line):
         self.fp_cache.write(line + '\n')
@@ -110,8 +105,8 @@ class RssEnterprise():
         with open(self.get_cache_path(), 'r') as fp:
             cache = fp.read().splitlines()
 
-        settings = self.load_settings(self.get_settings_path())
-        all_news_items = self.load_news_items(settings['feed_urls'])
+        feeds = self.load_feeds(self.get_feeds_path())
+        all_news_items = self.load_news_items(feeds)
         for i in all_news_items:
             try:
                 if i['link'] not in cache:
