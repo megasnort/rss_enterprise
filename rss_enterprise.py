@@ -1,7 +1,7 @@
 import os
 import json
 import tkinter as tk
-from tkinter import ttk, TclError, BOTH, Text, Frame
+from tkinter import ttk, TclError, BOTH, Text, Frame, END
 import feedparser
 from dateutil.parser import parse
 from future import Future
@@ -10,7 +10,7 @@ from future import Future
 class RssEnterprise():
     def __init__(self):
         root = tk.Tk()
-        root.geometry("1000x500")
+        root.geometry("1000x700")
 
         top_frame = Frame(root)
         top_frame.pack(fill=BOTH, expand=True)
@@ -36,12 +36,12 @@ class RssEnterprise():
         scrollbar_tree.pack(side='right', fill='y')
         self.tree.pack(fill=BOTH, expand=True)
 
-        text = Text(bottom_frame)
+        self.text = Text(bottom_frame)
 
-        scrollbar_text = ttk.Scrollbar(bottom_frame, orient="vertical", command=text.yview)
-        text.configure(yscrollcommand=scrollbar_text.set)
+        scrollbar_text = ttk.Scrollbar(bottom_frame, orient="vertical", command=self.text.yview)
+        self.text.configure(yscrollcommand=scrollbar_text.set)
         scrollbar_text.pack(side='right', fill='y')
-        text.pack(fill=BOTH, expand=True)
+        self.text.pack(fill=BOTH, expand=True)
 
         root.mainloop()
 
@@ -79,17 +79,21 @@ class RssEnterprise():
         for i in news_items:
             try:
                 self.tree.insert(
-                    '', 'end', i['link'], text=i['title'], values=(i['channel_title'], i['formatted_date'], )
+                    '', 'end', i['link'], text=i['title'], values=(i['channel_title'], i['formatted_date'], i['summary'], )
                 )
             except (TclError, KeyError):
                 # in case of double entries, or entries without a link, we just forget about them
                 pass
 
     def on_tree_select(self, event):
-        item = self.tree.selection()[0]
-        item_text = self.tree.item(item, "text")
-        item_id = self.tree.item(item, "value")
-        print(item)
+        id = self.tree.selection()[0]
+        summary = self.tree.item(id, "values")[2]
+        self.set_input(summary)
+        print(summary)
+
+    def set_input(self, value):
+        self.text.delete(1.0, END)
+        self.text.insert(1.0, value)
 
 
 if __name__ == '__main__':
