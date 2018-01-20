@@ -6,16 +6,17 @@ import feedparser
 from dateutil.parser import parse
 from future import Future
 
+import webbrowser
 
 class RssEnterprise():
     def __init__(self):
-        root = tk.Tk()
-        root.geometry("1000x700")
+        self.root = tk.Tk()
+        self.root.geometry("1000x700")
 
-        top_frame = Frame(root)
+        top_frame = Frame(self.root)
         top_frame.pack(fill=BOTH, expand=True)
 
-        bottom_frame = Frame(root)
+        bottom_frame = Frame(self.root)
         bottom_frame.pack(fill=BOTH, expand=True)
 
         self.tree = ttk.Treeview(top_frame, selectmode='browse', columns=('title', 'feed', 'published', ))
@@ -43,7 +44,7 @@ class RssEnterprise():
         scrollbar_text.pack(side='right', fill='y')
         self.text.pack(fill=BOTH, expand=True)
 
-        root.mainloop()
+        self.root.mainloop()
 
     def get_settings_path(self):
         return os.path.join('test', 'test_settings.json')
@@ -89,12 +90,27 @@ class RssEnterprise():
         id = self.tree.selection()[0]
         summary = self.tree.item(id, "values")[2]
         self.set_input(summary)
-        print(summary)
+
+    def open_link(self, link):
+        webbrowser.open(link, 9, autoraise=False)
+        self.bring_to_front()
 
     def set_input(self, value):
         self.text.delete(1.0, END)
         self.text.insert(1.0, value)
 
+    def bring_to_front(self):
+        # self.root.attributes('-topmost', True)
+        # self.root.update()
+        # self.root.attributes('-topmost', False)
+
+        # self.root.after(1, lambda: self.root.focus_force())
+
+        # self.root.lift()
+        # self.root.attributes('-topmost', False)
+        # self.root.call('wm', 'attributes', '.', '-topmost', True)
+        # self.root.after_idle(self.root.call, 'wm', 'attributes', '.', '-topmost', False)
+        pass
 
 if __name__ == '__main__':
     rss_enterprise = RssEnterprise()
