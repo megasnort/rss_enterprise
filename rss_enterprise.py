@@ -107,14 +107,17 @@ class RssEnterprise():
         return sorted_entries
 
     def refresh_list(self):
-        settings_path = self.get_settings_path()
-        settings = self.load_settings(settings_path)
-        news_items = self.load_news_items(settings['feed_urls'])
-        for i in news_items:
+        with open(self.get_cache_path(), 'r') as fp:
+            cache = fp.read().splitlines()
+
+        settings = self.load_settings(self.get_settings_path())
+        all_news_items = self.load_news_items(settings['feed_urls'])
+        for i in all_news_items:
             try:
-                self.tree.insert(
-                    '', 'end', i['link'], text=i['title'], values=(i['channel_title'], i['formatted_date'], i['summary'], )
-                )
+                if i['link'] not in cache:
+                    self.tree.insert(
+                        '', 'end', i['link'], text=i['title'], values=(i['channel_title'], i['formatted_date'], i['summary'], )
+                    )
             except (TclError, KeyError):
                 # in case of double entries, or entries without a link, we just forget about them
                 pass
