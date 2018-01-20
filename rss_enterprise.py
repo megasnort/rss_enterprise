@@ -77,17 +77,19 @@ class RssEnterprise():
         settings = self.load_settings(settings_path)
         news_items = self.load_news_items(settings['feed_urls'])
         for i in news_items:
-            # print(i)
             try:
-                self.tree.insert('', 'end', i['id'], text=i['title'], values=(i['channel_title'], i['formatted_date'], ))
-            except TclError:
+                self.tree.insert(
+                    '', 'end', i['link'], text=i['title'], values=(i['channel_title'], i['formatted_date'], )
+                )
+            except (TclError, KeyError):
+                # in case of double entries, or entries without a link, we just forget about them
                 pass
 
     def on_tree_select(self, event):
         item = self.tree.selection()[0]
         item_text = self.tree.item(item, "text")
         item_id = self.tree.item(item, "value")
-        print(item_id)
+        print(item)
 
 
 if __name__ == '__main__':
