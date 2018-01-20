@@ -26,13 +26,15 @@ Walk through the news items with the arrow keys or mouse. Press ENTER to open th
 
 ## Roadmap
 
+- Make it available as a nice standalone app on
+    - Linux (apt)
+    - OSX (brew-cask)
+    - Windows
 - Open the link in a browser in the background
-- Add easier way to edit the feeds
-- Render basic HTML in the bottom frame (and don't use an editable Text Widget)
-- Create a very nice icon
-- Make installable with apt
-- Put it on PyPI
-- Make it installable with brew cask on OSX
-- Make it installable on windows
+- Add easier way to edit the feeds (and refresh news items when adding/removing feeds)
+- Render HTML in the bottom frame (and don't use an editable Text Widget)
+- Create a véry nice icon
+- Put it on PyPi
 - Clean up code
+- Tests
 - ...
