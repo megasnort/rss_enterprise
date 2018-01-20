@@ -25,7 +25,7 @@ class RssEnterprise():
         scrollbar_tree = ttk.Scrollbar(top_frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar_tree.set)
         self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
-
+        self.tree.bind('<Return>', self.open_current_weblink)
         self.tree.heading('#0', text='title', anchor=tk.CENTER)
         self.tree.heading('#1', text='feed', anchor=tk.CENTER)
         self.tree.heading('#2', text='published', anchor=tk.CENTER)
@@ -45,6 +45,10 @@ class RssEnterprise():
         self.text.pack(fill=BOTH, expand=True)
 
         self.root.mainloop()
+
+    def open_current_weblink(self, event):
+        id = self.tree.selection()[0]
+        self.open_link(id)
 
     def get_settings_path(self):
         return os.path.join('test', 'test_settings.json')
