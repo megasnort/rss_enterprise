@@ -18,12 +18,20 @@ class RssEnterprise():
         bottom_frame = Frame(root)
         bottom_frame.pack(fill=BOTH, expand=True)
 
-        self.tree = ttk.Treeview(top_frame, selectmode='browse')
+        self.tree = ttk.Treeview(top_frame, selectmode='browse', columns=('title', 'feed', 'published', ))
         self.refresh_list()
 
         scrollbar_tree = ttk.Scrollbar(top_frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar_tree.set)
         self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
+
+        self.tree.heading('#0', text='title', anchor=tk.CENTER)
+        self.tree.heading('#1', text='feed', anchor=tk.CENTER)
+        self.tree.heading('#2', text='published', anchor=tk.CENTER)
+
+        self.tree.column('#0', stretch=tk.YES, minwidth=50, width=430)
+        self.tree.column('#1', stretch=tk.YES, minwidth=50, width=150)
+        self.tree.column('#2', stretch=tk.YES, minwidth=50, width=200)
 
         scrollbar_tree.pack(side='right', fill='y')
         self.tree.pack(fill=BOTH, expand=True)
@@ -54,6 +62,8 @@ class RssEnterprise():
         entries = []
 
         for feed in feeds:
+            for i in feed["items"]:
+                i['channel_title'] = feed['channel']['title']
             entries.extend(feed["items"])
 
         sorted_entries = sorted(entries, key=lambda entry: entry['published'])
@@ -67,15 +77,15 @@ class RssEnterprise():
         for i in news_items:
             # print(i)
             try:
-                self.tree.insert('', 'end', i['id'], text=i['title'])
+                self.tree.insert('', 'end', i['id'], text=i['title'], values=(i['channel_title'], i['published'], ))
             except TclError:
                 pass
 
     def on_tree_select(self, event):
-        print("selected items:")
-        for item in self.tree.selection():
-            item_text = self.tree.item(item, "text")
-            print(item_text)
+        item = self.tree.selection()[0]
+        item_text = self.tree.item(item, "text")
+        item_id = self.tree.item(item, "value")
+        print(item_id)
 
 
 if __name__ == '__main__':
