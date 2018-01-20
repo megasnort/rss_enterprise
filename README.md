@@ -8,4 +8,14 @@ In my opinion, existing RSS Readers make everything to complicated. I just want 
 - open the news item in the default browser, in the background
 - have a RSS Reader with a hilarious name
 
-For now, nothing works, except the loading of some feeds defined in a settings file.
+
+## Usage
+
+Once you have installed the necessary [requirements](requirements.txt) in a Python 3.6 environment, boot the program with
+
+```bash
+python rss_enterprise.py
+```
+
+Walk through the items with the arrow keys or mouse. Press ENTER to open in your default browser.
+
