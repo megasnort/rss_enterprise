@@ -19,38 +19,40 @@ class RssEnterprise():
 
         self.assert_settings()
 
-        top_frame = Frame(self.root)
-        top_frame.pack(fill=BOTH, expand=True)
+        with open(self.get_cache_path(), mode='a') as self.fp_cache:
 
-        bottom_frame = Frame(self.root)
-        bottom_frame.pack(fill=BOTH, expand=True)
+            top_frame = Frame(self.root)
+            top_frame.pack(fill=BOTH, expand=True)
 
-        self.tree = ttk.Treeview(top_frame, selectmode='browse', columns=('title', 'feed', 'published', ))
-        self.refresh_list()
+            bottom_frame = Frame(self.root)
+            bottom_frame.pack(fill=BOTH, expand=True)
 
-        scrollbar_tree = ttk.Scrollbar(top_frame, orient="vertical", command=self.tree.yview)
-        self.tree.configure(yscrollcommand=scrollbar_tree.set)
-        self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
-        self.tree.bind('<Return>', self.open_current_weblink)
-        self.tree.heading('#0', text='title', anchor=tk.CENTER)
-        self.tree.heading('#1', text='feed', anchor=tk.CENTER)
-        self.tree.heading('#2', text='published', anchor=tk.CENTER)
+            self.tree = ttk.Treeview(top_frame, selectmode='browse', columns=('title', 'feed', 'published', ))
+            self.refresh_list()
 
-        self.tree.column('#0', stretch=tk.YES, minwidth=50, width=630)
-        self.tree.column('#1', stretch=tk.YES, minwidth=50, width=150)
-        self.tree.column('#2', stretch=tk.YES, minwidth=50, width=200)
+            scrollbar_tree = ttk.Scrollbar(top_frame, orient="vertical", command=self.tree.yview)
+            self.tree.configure(yscrollcommand=scrollbar_tree.set)
+            self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
+            self.tree.bind('<Return>', self.open_current_weblink)
+            self.tree.heading('#0', text='title', anchor=tk.CENTER)
+            self.tree.heading('#1', text='feed', anchor=tk.CENTER)
+            self.tree.heading('#2', text='published', anchor=tk.CENTER)
 
-        scrollbar_tree.pack(side='right', fill='y')
-        self.tree.pack(fill=BOTH, expand=True)
+            self.tree.column('#0', stretch=tk.YES, minwidth=50, width=630)
+            self.tree.column('#1', stretch=tk.YES, minwidth=50, width=150)
+            self.tree.column('#2', stretch=tk.YES, minwidth=50, width=200)
 
-        self.text = Text(bottom_frame)
+            scrollbar_tree.pack(side='right', fill='y')
+            self.tree.pack(fill=BOTH, expand=True)
 
-        scrollbar_text = ttk.Scrollbar(bottom_frame, orient="vertical", command=self.text.yview)
-        self.text.configure(yscrollcommand=scrollbar_text.set)
-        scrollbar_text.pack(side='right', fill='y')
-        self.text.pack(fill=BOTH, expand=True)
+            self.text = Text(bottom_frame)
 
-        self.root.mainloop()
+            scrollbar_text = ttk.Scrollbar(bottom_frame, orient="vertical", command=self.text.yview)
+            self.text.configure(yscrollcommand=scrollbar_text.set)
+            scrollbar_text.pack(side='right', fill='y')
+            self.text.pack(fill=BOTH, expand=True)
+
+            self.root.mainloop()
 
     def assert_settings(self):
         if not os.path.isdir(self.settings_folder_path):
@@ -82,6 +84,9 @@ class RssEnterprise():
             except json.decoder.JSONDecodeError:
                 print(self.get_settings_path() + ' seems to be malformed. Is should be a valid JSON file')
                 exit(1)
+
+    def add_line_to_cache(self, line):
+        self.fp_cache.write(line + '\n')
 
     def load_news_items(self, feed_urls):
         print('loading news items')
@@ -118,6 +123,7 @@ class RssEnterprise():
         id = self.tree.selection()[0]
         summary = self.tree.item(id, "values")[2]
         self.set_input(summary)
+        self.add_line_to_cache(id)
 
     def open_link(self, link):
         webbrowser.open(link, 9, autoraise=False)
@@ -139,6 +145,7 @@ class RssEnterprise():
         # self.root.call('wm', 'attributes', '.', '-topmost', True)
         # self.root.after_idle(self.root.call, 'wm', 'attributes', '.', '-topmost', False)
         pass
+
 
 if __name__ == '__main__':
     rss_enterprise = RssEnterprise()
