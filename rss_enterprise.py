@@ -5,13 +5,19 @@ from tkinter import ttk, TclError, BOTH, Text, Frame, END
 import feedparser
 from dateutil.parser import parse
 from future import Future
-
 import webbrowser
+from pathlib import Path
+from shutil import copyfile
+
 
 class RssEnterprise():
     def __init__(self):
         self.root = tk.Tk()
         self.root.geometry("1000x700")
+
+        self.settings_folder_path = os.path.join(Path.home(), '.rss_enterprise')
+
+        self.assert_settings()
 
         top_frame = Frame(self.root)
         top_frame.pack(fill=BOTH, expand=True)
@@ -46,12 +52,26 @@ class RssEnterprise():
 
         self.root.mainloop()
 
+    def assert_settings(self):
+        if not os.path.isdir(self.settings_folder_path):
+            os.mkdir(self.settings_folder_path)
+
+        if not os.path.isfile(self.get_settings_path()):
+            copyfile(os.path.join('test', 'settings.json'), self.get_settings_path())
+
+        if not os.path.isfile(self.get_cache_path()):
+            with open(self.get_cache_path(), mode="w") as fp:
+                fp.write('')
+
     def open_current_weblink(self, event):
         id = self.tree.selection()[0]
         self.open_link(id)
 
     def get_settings_path(self):
-        return os.path.join('test', 'test_settings.json')
+        return os.path.join(self.settings_folder_path, 'settings.json')
+
+    def get_cache_path(self):
+        return os.path.join(self.settings_folder_path, 'cache')
 
     def load_settings(self, settings_path):
         print('loading settings')
