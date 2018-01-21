@@ -1,5 +1,7 @@
 # RSS Enterprise
 
+![RSS Enterprise](icon/icon.svg "RSS Enterprise")
+
 In my opinion, existing RSS Readers make everything to complicated. I just want to
 
 - subscribe to feeds
@@ -7,10 +9,6 @@ In my opinion, existing RSS Readers make everything to complicated. I just want 
 - view the body of these news item by walking this list
 - open the news item in the default browser, in the background
 - have a RSS Reader with a hilarious name
-
-## Setup
-
-In `~/.rss_enterprise/feeds.txt` you will find some default feeds. Replace them, or add feeds of your liking. For now you need to ~~restart~~ re-engage RSS Enterprise to reload your feeds.
 
 ## Usage
 
@@ -22,6 +20,9 @@ python rss_enterprise.py
 
 Walk through the news items with the arrow keys or mouse. Press ENTER to open the link in your default browser. Once you view a specific item, it will not reappear in the list ever again.
 
+## Setup
+
+Once you started the application the first time, in `~/.rss_enterprise/feeds.txt` you will find some default feeds. Replace them, or add feeds of your liking. For now you need to ~~restart~~ re-engage RSS Enterprise to reload your feeds.
 
 
 ## Roadmap
