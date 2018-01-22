@@ -7,13 +7,20 @@ from future import Future
 import webbrowser
 from pathlib import Path
 from shutil import copyfile
-from tkinterhtml import HtmlFrame
+from tkinterhtml import HtmlFrame, TkinterHtml
+import requests
+from urllib.request import urlopen
+from PIL import Image, ImageTk
+import io
+
+
 
 class RssEnterprise():
     def __init__(self):
         self.root = tk.Tk()
         self.root.geometry("1000x700")
         self.root.title('RSS Enterprise')
+        # self.root.iconbitmap("/home/stef/Python/rss_enterprise/icon.ico")
 
         self.settings_folder_path = os.path.join(Path.home(), '.rss_enterprise')
 
@@ -45,15 +52,23 @@ class RssEnterprise():
             scrollbar_tree.pack(side='right', fill='y')
             self.tree.pack(fill=BOTH, expand=True)
 
-            #self.text = Text(bottom_frame)
-            self.text = HtmlFrame(self.root, horizontal_scrollbar="auto")
-
-            #scrollbar_text = ttk.Scrollbar(bottom_frame, orient="vertical", command=self.text.yview)
-            #self.text.configure(yscrollcommand=scrollbar_text.set)
-            #scrollbar_text.pack(side='right', fill='y')
+            #self.text = HtmlFrame(self.root, fontscale=1.2, horizontal_scrollbar="auto")
+            self.text = TkinterHtml(self.root, imagecmd=self.process_image)
             self.text.pack(fill=BOTH, expand=True)
 
             self.root.mainloop()
+
+    def process_image(self, url):
+
+        #fp = urlopen(url)
+        #data = fp.read()
+        #fp.close()close
+
+        r = requests.get(url, stream=True)
+
+        image = Image.open(r.raw)
+        photo = ImageTk.PhotoImage(image)
+        return photo
 
     def assert_settings(self):
         if not os.path.isdir(self.settings_folder_path):
@@ -130,9 +145,9 @@ class RssEnterprise():
         self.bring_to_front()
 
     def set_input(self, value):
-        #self.text.delete(1.0, END)
-        #self.text.insert(1.0, value)
-        self.text.set_content(value)
+        #self.text.set_content(value)
+        self.text.reset()
+        self.text.parse(value)
 
     def bring_to_front(self):
         # self.root.attributes('-topmost', True)
