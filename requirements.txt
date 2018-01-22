@@ -1,3 +1,10 @@
+altgraph==0.15
 feedparser==5.2.1
+future==0.16.0
+macholib==1.9
+pefile==2017.11.5
+PyInstaller==3.3.1
 python-dateutil==2.6.1
 six==1.11.0
+tkinterhtml==0.7
+wxPython==4.0.0b2

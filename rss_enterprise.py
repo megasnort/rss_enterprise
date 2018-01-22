@@ -7,7 +7,7 @@ from future import Future
 import webbrowser
 from pathlib import Path
 from shutil import copyfile
-
+from tkinterhtml import HtmlFrame
 
 class RssEnterprise():
     def __init__(self):
@@ -44,11 +44,12 @@ class RssEnterprise():
             scrollbar_tree.pack(side='right', fill='y')
             self.tree.pack(fill=BOTH, expand=True)
 
-            self.text = Text(bottom_frame)
+            #self.text = Text(bottom_frame)
+            self.text = HtmlFrame(self.root, horizontal_scrollbar="auto")
 
-            scrollbar_text = ttk.Scrollbar(bottom_frame, orient="vertical", command=self.text.yview)
-            self.text.configure(yscrollcommand=scrollbar_text.set)
-            scrollbar_text.pack(side='right', fill='y')
+            #scrollbar_text = ttk.Scrollbar(bottom_frame, orient="vertical", command=self.text.yview)
+            #self.text.configure(yscrollcommand=scrollbar_text.set)
+            #scrollbar_text.pack(side='right', fill='y')
             self.text.pack(fill=BOTH, expand=True)
 
             self.root.mainloop()
@@ -128,8 +129,9 @@ class RssEnterprise():
         self.bring_to_front()
 
     def set_input(self, value):
-        self.text.delete(1.0, END)
-        self.text.insert(1.0, value)
+        #self.text.delete(1.0, END)
+        #self.text.insert(1.0, value)
+        self.text.set_content(value)
 
     def bring_to_front(self):
         # self.root.attributes('-topmost', True)

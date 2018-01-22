@@ -33,7 +33,6 @@ Once you started the application the first time, in `~/.rss_enterprise/feeds.txt
     - Windows
 - Open the link in a browser in the background
 - Add easier way to edit the feeds (and refresh news items when adding/removing feeds)
-- Render HTML in the bottom frame (and don't use an editable Text Widget)
 - Create a véry nice icon
 - Put it on PyPi
 - Clean up code
