@@ -13,6 +13,7 @@ class RssEnterprise():
     def __init__(self):
         self.root = tk.Tk()
         self.root.geometry("1000x700")
+        self.root.title('RSS Enterprise')
 
         self.settings_folder_path = os.path.join(Path.home(), '.rss_enterprise')
 
