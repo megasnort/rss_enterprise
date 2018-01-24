@@ -5,9 +5,11 @@ import feedparser
 from dateutil.parser import parse
 from future import Future
 import webbrowser
+import subprocess
 from pathlib import Path
 from shutil import copyfile
 from tkinterhtml import HtmlFrame
+from time import sleep
 
 
 class RssEnterprise():
@@ -22,14 +24,13 @@ class RssEnterprise():
         self.assert_settings()
 
         with open(self.get_cache_path(), mode='a') as self.fp_cache:
-
             top_frame = Frame(self.root)
             top_frame.pack(fill=BOTH, expand=True)
 
             bottom_frame = Frame(self.root)
             bottom_frame.pack(fill=BOTH, expand=True)
 
-            self.tree = ttk.Treeview(top_frame, selectmode='browse', columns=('title', 'feed', 'published', ))
+            self.tree = ttk.Treeview(top_frame, selectmode='browse', columns=('title', 'feed', 'published',))
             self.refresh_list()
 
             scrollbar_tree = ttk.Scrollbar(top_frame, orient="vertical", command=self.tree.yview)
@@ -110,7 +111,8 @@ class RssEnterprise():
             try:
                 if i['link'] not in cache:
                     self.tree.insert(
-                        '', 'end', i['link'], text=i['title'], values=(i['channel_title'], i['formatted_date'], i['summary'], )
+                        '', 'end', i['link'], text=i['title'],
+                        values=(i['channel_title'], i['formatted_date'], i['summary'],)
                     )
             except (TclError, KeyError):
                 # in case of double entries, or entries without a link, we just forget about them
@@ -123,24 +125,13 @@ class RssEnterprise():
         self.add_line_to_cache(id)
 
     def open_link(self, link):
-        webbrowser.open(link, 9, autoraise=False)
-        self.bring_to_front()
+        # works only on linux
+        subprocess.check_output(['xdg-open', link])
+        sleep(0.5   )
+        subprocess.check_output(['wmctrl', '-a', 'RSS Enterprise', ])
 
     def set_input(self, value):
         self.text.set_content(value)
-
-    def bring_to_front(self):
-        # self.root.attributes('-topmost', True)
-        # self.root.update()
-        # self.root.attributes('-topmost', False)
-
-        # self.root.after(1, lambda: self.root.focus_force())
-
-        # self.root.lift()
-        # self.root.attributes('-topmost', False)
-        # self.root.call('wm', 'attributes', '.', '-topmost', True)
-        # self.root.after_idle(self.root.call, 'wm', 'attributes', '.', '-topmost', False)
-        pass
 
 
 if __name__ == '__main__':
