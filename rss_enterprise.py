@@ -93,7 +93,11 @@ class RssEnterprise():
         for feed in feeds:
             for i in feed["items"]:
                 i['channel_title'] = feed['channel']['title']
-                i['formatted_date'] = parse(i['published'])
+                try:
+                    i['formatted_date'] = parse(i['published'])
+                except KeyError:
+                    i['formatted_date'] = parse(i['updated'])
+
             entries.extend(feed["items"])
 
         sorted_entries = sorted(entries, key=lambda entry: entry['formatted_date'])
