@@ -130,9 +130,9 @@ class RssEnterprise():
 
     def open_link(self, link):
         # works only on linux
-        subprocess.check_output(['xdg-open', link])
-        sleep(0.5   )
-        subprocess.check_output(['wmctrl', '-a', 'RSS Enterprise', ])
+        subprocess.Popen(['xdg-open', link])
+        sleep(0.5)
+        subprocess.Popen(['wmctrl', '-a', 'RSS Enterprise', ])
 
     def set_input(self, value):
         self.text.set_content(value)
