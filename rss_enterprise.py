@@ -9,6 +9,7 @@ from pathlib import Path
 from shutil import copyfile
 from tkinterhtml import HtmlFrame
 from time import sleep
+from threading import Thread
 
 
 class RssEnterprise():
@@ -82,18 +83,23 @@ class RssEnterprise():
     def add_line_to_cache(self, line):
         self.fp_cache.write(line + '\n')
 
+    def load_feed(self, feeds, feed_url):
+        print('start loading ', feed_url)
+        result = feedparser.parse(feed_url)
+        if result['status'] == 404:
+            print(feed_url, 'was not found') 
+        else:
+            feeds.append(result)
+
     def load_news_items(self, feed_urls):
         print('loading news items')
 
         feeds = []
 
-        for rss_url in feed_urls:
-            result = feedparser.parse(rss_url)
-            
-            if result['status'] == 404:
-                print(rss_url, 'was not found') 
-            else:
-                feeds.append(result)
+        threads = [Thread(target=self.load_feed, args=(feeds, feed_url)) for feed_url in feed_urls]
+
+        [t.start() for t in threads]
+        [t.join() for t in threads]
 
         entries = []
 
