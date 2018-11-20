@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk, TclError, BOTH, Frame
 import feedparser
 from dateutil.parser import parse
-from future import Future
 import webbrowser
 import subprocess
 from pathlib import Path
@@ -85,8 +84,16 @@ class RssEnterprise():
 
     def load_news_items(self, feed_urls):
         print('loading news items')
-        future_calls = [Future(feedparser.parse, rss_url) for rss_url in feed_urls]
-        feeds = [future_obj() for future_obj in future_calls]
+
+        feeds = []
+
+        for rss_url in feed_urls:
+            result = feedparser.parse(rss_url)
+            
+            if result['status'] == 404:
+                print(rss_url, 'was not found') 
+            else:
+                feeds.append(result)
 
         entries = []
 
