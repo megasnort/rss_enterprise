@@ -2,6 +2,8 @@ import os
 import tkinter as tk
 from tkinter import ttk, TclError, BOTH, Frame
 import feedparser
+import datetime
+import pytz
 from dateutil.parser import parse
 import webbrowser
 import subprocess
@@ -10,7 +12,6 @@ from shutil import copyfile
 from tkinterhtml import HtmlFrame
 from time import sleep
 from threading import Thread
-
 
 class RssEnterprise():
     def __init__(self):
@@ -108,12 +109,17 @@ class RssEnterprise():
                 i['channel_title'] = feed['channel']['title']
                 try:
                     i['formatted_date'] = parse(i['published'])
+                    print(i['published'])
                 except KeyError:
                     i['formatted_date'] = parse(i['updated'])
+                    print(i['updated'])
+
+                if i['formatted_date'].tzinfo is None or i['formatted_date'].tzinfo.utcoffset(i['formatted_date']) is None:
+                    i['formatted_date'] = i['formatted_date'].replace(tzinfo=pytz.utc)
 
             entries.extend(feed["items"])
 
-        sorted_entries = sorted(entries, key=lambda entry: entry['formatted_date'])
+        sorted_entries = sorted(entries, key=lambda entry: i['formatted_date'])
         sorted_entries.reverse()
 
         return sorted_entries
