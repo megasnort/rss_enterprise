@@ -87,10 +87,13 @@ class RssEnterprise():
     def load_feed(self, feeds, feed_url):
         print('start loading ', feed_url)
         result = feedparser.parse(feed_url)
-        if result['status'] == 404:
-            print(feed_url, 'was not found') 
-        else:
-            feeds.append(result)
+        try:
+            if result['status'] == 404:
+                print(feed_url, 'was not found') 
+            else:
+                feeds.append(result)
+        except KeyError:
+            print('No status', feed_url, result)
 
     def load_news_items(self, feed_urls):
         print('loading news items')
